@@ -346,10 +346,10 @@ function Moon(){
   this.distance=0;
   this.radius=(1000+random(2000)).toFixed(2);//Km
   this.orbitalPeriod=(5+random(1000)).toFixed(2);//Days
+  this.orbitalOffset=random(2*Math.PI);
   this.rotationalPeriod=(5+random(1000)).toFixed(2);//Hours
   this.tilt=random(180);
   this.surface=surfaces[random(surfaces.length-1,true)];
-
 
 }
 

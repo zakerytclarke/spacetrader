@@ -38,7 +38,7 @@ systemMapCtx.fill();
 //var offsetY=250;
 
 var zoom=3;
-var maxZoom=10000;
+var maxZoom=10000000;
 var offsetX=0;
 var offsetY=0;
 setInterval(function(x){
@@ -128,20 +128,68 @@ function renderGalacticMap(){
   galacticMapCtx.fillStyle="black";
   galacticMapCtx.fillRect(0,0,midw*2,midh*2);
 
-  var zoomScaleFactor=Math.sqrt(zoom);
+  var zoomScaleFactor=Infinity;
   for(var i=0;i<universe.systems.length;i++){
     var x=universe.systems[i].position.x*(zoom*midw/widthUniverse);
     var y=universe.systems[i].position.y*(zoom*midh/widthUniverse);
-    if(midw+x-(offsetX*(zoom*midw/widthUniverse))>-midw&&(midw+x-(offsetX*(zoom*midw/widthUniverse))<zoomScaleFactor*midw)) {//Ony render things in frame
-      if(midh+y+(offsetY*(zoom*midh/widthUniverse))>-midh&&midh+y+(offsetY*(zoom*midh/widthUniverse)<zoomScaleFactor*midh)) {
+    if(midw+x-(offsetX*(zoom*midw/widthUniverse))>-zoomScaleFactor*midw&&(midw+x-(offsetX*(zoom*midw/widthUniverse))<zoomScaleFactor*midw)) {//Only render things in frame
+      if(midh+y+(offsetY*(zoom*midh/widthUniverse))>-zoomScaleFactor*midh&&midh+y+(offsetY*(zoom*midh/widthUniverse)<zoomScaleFactor*midh)) {
         if(zoom>7){//Close enought to see system scale
           galacticMapCtx.strokeStyle="white";
           var tempSystem=universe.systems[i];
 
-
+          var distanceScale=10;//Should be 63421
+          var sizeScale=149600000//Should be 149600000*63421
           for(var j=0;j<tempSystem.planets.length;j++){//Draw Planets
-            //63421
-            var planetScale=zoom*tempSystem.planets[j].distance/10;
+            var planetScale=zoom*tempSystem.planets[j].distance/distanceScale;
+            var objectScale=zoom*tempSystem.planets[j].radius/sizeScale;
+
+            var velocity=2*Math.PI/tempSystem.planets[j].orbitalPeriod;
+            var degreeOffset=(tempSystem.planets[j].orbitalOffset+(time/86400000));
+            //var degreeOffset=(tempSystem.planets[j].orbitalOffset+(time/10000));
+
+            var upX=planetScale*Math.cos(velocity*degreeOffset);
+            var upY=planetScale*Math.sin(velocity*degreeOffset);
+
+
+            //Draw Planet
+            switch(tempSystem.planets[j].surface){
+              case "Ice":
+                galacticMapCtx.fillStyle="#00ffff";
+              break;
+              case "Rock":
+                galacticMapCtx.fillStyle="grey";
+              break;
+              case "Ocean":
+                galacticMapCtx.fillStyle="blue";
+              break;
+              case "Forest":
+                galacticMapCtx.fillStyle="green";
+              break;
+              case "Desert":
+                galacticMapCtx.fillStyle="#ffdd99";
+              break;
+              case "Magma":
+                galacticMapCtx.fillStyle="red";
+              break;
+              case "Swamp":
+                galacticMapCtx.fillStyle="#339966";
+              break;
+              case "Tundra":
+                galacticMapCtx.fillStyle="#eeeeee";
+              break;
+              case "Asteroid":
+                galacticMapCtx.fillStyle="#DBBB88";
+              break;
+              default:
+                galacticMapCtx.fillStyle="white";
+              break;
+            }
+            galacticMapCtx.beginPath();
+            galacticMapCtx.arc(midw+x-(offsetX*(zoom*midw/widthUniverse))+upX,midh+y+(offsetY*(zoom*midh/widthUniverse))+upY,objectScale,0,2*Math.PI);
+            galacticMapCtx.fill();
+
+            //Draw Orbits
             galacticMapCtx.beginPath();
             galacticMapCtx.arc(midw+x-(offsetX*(zoom*midw/widthUniverse)),midh+y+(offsetY*(zoom*midh/widthUniverse)),planetScale,0,2*Math.PI);
             galacticMapCtx.stroke();
@@ -149,18 +197,66 @@ function renderGalacticMap(){
             if(zoom>20){
               for(var k=0;k<tempSystem.planets[j].moons.length;k++){//Draw Moons
                 //63421AU=1LY
-                var velocity=2*Math.PI/tempSystem.planets[j].orbitalPeriod;
-                var degreeOffset=(tempSystem.planets[j].orbitalOffset+(time/86400000));
-                //var degreeOffset=(tempSystem.planets[j].orbitalOffset+(time/10000));
 
-                var upX=planetScale*Math.cos(velocity*degreeOffset);
-                var upY=planetScale*Math.sin(velocity*degreeOffset);
                 galacticMapCtx.beginPath();
                 galacticMapCtx.arc(midw+x-(offsetX*(zoom*midw/widthUniverse))+upX,midh+y+(offsetY*(zoom*midh/widthUniverse))+upY,zoom*tempSystem.planets[j].moons[k].distance/10,0,2*Math.PI);
                 galacticMapCtx.stroke();
 
+
+
+                //Draw Moons
+
+                var moonScale=zoom*tempSystem.planets[j].moons[k].distance/distanceScale;
+                var moonobjectScale=zoom*tempSystem.planets[j].moons[k].radius/sizeScale;
+
+                var moonvelocity=2*Math.PI/tempSystem.planets[j].moons[k].orbitalPeriod;
+                var moondegreeOffset=(tempSystem.planets[j].moons[k].orbitalOffset+(time/86400000));
+                //var degreeOffset=(tempSystem.planets[j].orbitalOffset+(time/10000));
+
+                var moonupX=moonScale*Math.cos(moonvelocity*moondegreeOffset);
+                var moonupY=moonScale*Math.sin(moonvelocity*moondegreeOffset);
+                //Draw Moon
+                switch(tempSystem.planets[j].moons[k].surface){
+                  case "Ice":
+                    galacticMapCtx.fillStyle="#00ffff";
+                  break;
+                  case "Rock":
+                    galacticMapCtx.fillStyle="grey";
+                  break;
+                  case "Ocean":
+                    galacticMapCtx.fillStyle="blue";
+                  break;
+                  case "Forest":
+                    galacticMapCtx.fillStyle="green";
+                  break;
+                  case "Desert":
+                    galacticMapCtx.fillStyle="#ffdd99";
+                  break;
+                  case "Magma":
+                    galacticMapCtx.fillStyle="red";
+                  break;
+                  case "Swamp":
+                    galacticMapCtx.fillStyle="#339966";
+                  break;
+                  case "Tundra":
+                    galacticMapCtx.fillStyle="#eeeeee";
+                  break;
+                  case "Asteroid":
+                    galacticMapCtx.fillStyle="#DBBB88";
+                  break;
+                  default:
+                    galacticMapCtx.fillStyle="white";
+                  break;
+                }
+                galacticMapCtx.beginPath();
+                galacticMapCtx.arc(midw+x-(offsetX*(zoom*midw/widthUniverse))+upX+moonupX,midh+y+(offsetY*(zoom*midh/widthUniverse))+upY+moonupY,moonobjectScale,0,2*Math.PI);
+                galacticMapCtx.fill();
+
+
               }
             }
+
+
 
 
           }
