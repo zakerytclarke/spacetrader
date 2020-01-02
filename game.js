@@ -133,7 +133,7 @@ function renderGalacticMap(){
     var y=universe.systems[i].position.y*(zoom*midh/widthUniverse);
     if(midw+x-(offsetX*(zoom*midw/widthUniverse))>-midw&&(midw+x-(offsetX*(zoom*midw/widthUniverse))<3*midw)) {//Ony render things in frame
       if(midh+y+(offsetY*(zoom*midh/widthUniverse))>-midh&&midh+y+(offsetY*(zoom*midh/widthUniverse)<3*midh)) {
-        if(zoom>10){//Close enought to see system scale
+        if(zoom>7){//Close enought to see system scale
           galacticMapCtx.strokeStyle="white";
           var tempSystem=universe.systems[i];
 
@@ -148,11 +148,12 @@ function renderGalacticMap(){
             if(zoom>20){
               for(var k=0;k<tempSystem.planets[j].moons.length;k++){//Draw Moons
                 //63421AU=1LY
-                //var degreeOffset=(tempSystem.planets[j].orbitalOffset+(time/86400000));
-                var velocity=tempSystem.planets[j].orbitalPeriod;
-                var degreeOffset=(tempSystem.planets[j].orbitalOffset+(time/10000));
-                var upX=planetScale*Math.cos(degreeOffset);
-                var upY=planetScale*Math.sin(degreeOffset);
+                var velocity=2*Math.PI/tempSystem.planets[j].orbitalPeriod;
+                var degreeOffset=(tempSystem.planets[j].orbitalOffset+(time/86400000));
+                //var degreeOffset=(tempSystem.planets[j].orbitalOffset+(time/10000));
+
+                var upX=planetScale*Math.cos(velocity*degreeOffset);
+                var upY=planetScale*Math.sin(velocity*degreeOffset);
                 galacticMapCtx.beginPath();
                 galacticMapCtx.arc(midw+x-(offsetX*(zoom*midw/widthUniverse))+upX,midh+y+(offsetY*(zoom*midh/widthUniverse))+upY,zoom*tempSystem.planets[j].moons[k].distance/10,0,2*Math.PI);
                 galacticMapCtx.stroke();
