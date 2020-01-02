@@ -28,6 +28,7 @@ var solSystem={
               orbitalPeriod:87.96926,
               rotationalPeriod:1407.51,
               tilt:0.01,
+              orbitalOffset:0,
               moons:[
 
               ]
@@ -42,6 +43,7 @@ var solSystem={
               orbitalPeriod:224.7008,
               rotationalPeriod:5832.43,
               tilt:177.36,
+              orbitalOffset:0,
               moons:[
 
               ]
@@ -56,6 +58,7 @@ var solSystem={
               orbitalPeriod:365,
               rotationalPeriod:24,
               tilt:23.45,
+              orbitalOffset:0,
               moons:[
                 {
                   name:"Moon",
@@ -64,6 +67,7 @@ var solSystem={
                   orbitalPeriod:27.322,
                   rotationalPeriod:655.73,
                   tilt:1.5424,
+                  orbitalOffset:0,
                   surface:"Rock"
                 }
               ]
@@ -77,6 +81,7 @@ var solSystem={
               radius:3389.5,
               orbitalPeriod:686.97959,
               rotationalPeriod:24.622,
+              orbitalOffset:0,
               tilt:25.19,
               moons:[
                 {
@@ -86,6 +91,7 @@ var solSystem={
                   orbitalPeriod:.319,
                   rotationalPeriod:7.66,
                   tilt:0.046,
+                  orbitalOffset:0,
                   surface:"Asteroid"
                 },
                 {
@@ -95,6 +101,7 @@ var solSystem={
                   orbitalPeriod:1.262,
                   rotationalPeriod:30.29,
                   tilt:0.897,
+                  orbitalOffset:0,
                   surface:"Asteroid"
                 },
               ]
@@ -168,6 +175,7 @@ var solSystem={
 
 var universe=new Galaxy;
 //print(universe);
+console.log(universe);
 
 var visited=[];
 var cAvg=0;
@@ -212,8 +220,27 @@ function Galaxy(){
         }
       }
     }
+    var temp=this.systems[i];
+    temp.connections.sort(function(x,y){
+      return distance(temp.position,y.position)-distance(temp.position,x.position);
+    })
   }
 
+
+  //Remove Connections of Connections
+  for(var i=0;i<this.systems.length;i++){
+    for(var j=0;j<this.systems[i].connections.length;j++){
+      for(var k=0;k<this.systems[i].connections.length;k++){
+        if(this.systems[i].connections[j]&&this.systems[i].connections[j].connections.indexOf(this.systems[i].connections[k])!=-1){//Connection is connection of current
+          if(distance(this.systems[i].position,this.systems[i].connections[k].position)<distance(this.systems[i].position,this.systems[i].connections[j].position)){//Get rid of further one
+            this.systems[i].connections.splice(k,1);
+          }else{
+            this.systems[i].connections.splice(j,1);
+          }
+        }
+      }
+    }
+  }
 
   //Setup Factions
   /*
@@ -289,6 +316,7 @@ function Planet(){
   this.orbitalPeriod=(5+random(1000)).toFixed(2);//Days
   this.rotationalPeriod=(5+random(1000)).toFixed(2);//Hours
   this.tilt=random(180);
+  this.orbitalOffset=random(2*Math.PI);
 
 
 
@@ -373,7 +401,7 @@ function randomGaussian(y,int){
 
 function NameGenerator(){
   var prefixes=["Sa","Ut","Ur","Er","Co","Ti","Te","Di","Hy","Me","Po","Te","At","Th","Ub","Nim","Ep","Pa","Anth","Tar","Al","Cra","Ja","Ma","Ri","Su","Ya"];
-  var midfixes=["","yro","ta","th","mas","uu","ua","dav","ge","das","aal","po","ba","en","ar","ana","im","ce","cel","arth","ku","s","la","ban"];
+  var midfixes=["","yro","ta","th","mas","uu","ua","dav","ge","das","po","aal","ba","en","ar","ana","im","ce","cel","arth","ku","s","la","ban"];
   var postfixes=["","a","ar","er","an","os","en","es","is","iin","oth","nt","on","do","adus","eras","enas","o","gan","ora","ir","pa","ino"];
   var secondNames=["","","","","","","","","","","Prime","Carpo",""]
   var name="";
