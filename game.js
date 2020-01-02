@@ -37,7 +37,7 @@ systemMapCtx.fill();
 //var offsetX=290;
 //var offsetY=250;
 
-var zoom=3;
+var zoom=1;
 var maxZoom=10000000;
 var offsetX=0;
 var offsetY=0;
