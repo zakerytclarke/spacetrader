@@ -129,17 +129,56 @@ function renderGalacticMap(){
   galacticMapCtx.fillRect(0,0,midw*2,midh*2);
 
   var zoomScaleFactor=Infinity;
+  var distanceScale=10;//Should be 63421
+  var sizeScale=149600000//Should be 149600000*63421
   for(var i=0;i<universe.systems.length;i++){
     var x=universe.systems[i].position.x*(zoom*midw/widthUniverse);
     var y=universe.systems[i].position.y*(zoom*midh/widthUniverse);
     if(midw+x-(offsetX*(zoom*midw/widthUniverse))>-zoomScaleFactor*midw&&(midw+x-(offsetX*(zoom*midw/widthUniverse))<zoomScaleFactor*midw)) {//Only render things in frame
       if(midh+y+(offsetY*(zoom*midh/widthUniverse))>-zoomScaleFactor*midh&&midh+y+(offsetY*(zoom*midh/widthUniverse)<zoomScaleFactor*midh)) {
+        //Draw Star
+        var tempSystem=universe.systems[i];
+
+        for(var j=0;j<tempSystem.stars.length;j++){//TODO Fix to render Binary Star Systems
+          var starScale=zoom*tempSystem.stars[j].radius/sizeScale;
+          switch(tempSystem.stars[j].type){
+            case "M":
+              galacticMapCtx.fillStyle="#DE794D";
+            break;
+            case "K":
+              galacticMapCtx.fillStyle="#FDC07F";
+            break;
+            case "G":
+              galacticMapCtx.fillStyle="#FFF59C";
+            break;
+            case "F":
+              galacticMapCtx.fillStyle="#FFFFDA";
+            break;
+            case "A":
+              galacticMapCtx.fillStyle="#F4FEFF";
+            break;
+            case "B":
+              galacticMapCtx.fillStyle="#E6F0FF";
+            break;
+            case "O":
+              galacticMapCtx.fillStyle="#9AA2FF";
+            break;
+            default:
+              galacticMapCtx.fillStyle="white";
+            break;
+          }
+          galacticMapCtx.beginPath();
+          galacticMapCtx.arc(midw+x-(offsetX*(zoom*midw/widthUniverse)),midh+y+(offsetY*(zoom*midh/widthUniverse)),starScale,0,2*Math.PI);
+          galacticMapCtx.fill();
+        }
+
+
+
+
         if(zoom>7){//Close enought to see system scale
           galacticMapCtx.strokeStyle="white";
-          var tempSystem=universe.systems[i];
 
-          var distanceScale=10;//Should be 63421
-          var sizeScale=149600000//Should be 149600000*63421
+
           for(var j=0;j<tempSystem.planets.length;j++){//Draw Planets
             var planetScale=zoom*tempSystem.planets[j].distance/distanceScale;
             var objectScale=zoom*tempSystem.planets[j].radius/sizeScale;
