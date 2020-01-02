@@ -112,11 +112,11 @@ window.addEventListener("wheel",function(event){
   //offsetY+=y/1000;
   if(event.deltaY>0){
     if(zoom<maxZoom){
-      zoom+=event.deltaY/100;
+      zoom+=(event.deltaY/100)*zoom/100;
     }
   }else{
     if(zoom>0){
-      zoom+=event.deltaY/100;
+      zoom+=(event.deltaY/100)*zoom/100;
     }
   }
 
@@ -128,11 +128,12 @@ function renderGalacticMap(){
   galacticMapCtx.fillStyle="black";
   galacticMapCtx.fillRect(0,0,midw*2,midh*2);
 
+  var zoomScaleFactor=Math.sqrt(zoom);
   for(var i=0;i<universe.systems.length;i++){
     var x=universe.systems[i].position.x*(zoom*midw/widthUniverse);
     var y=universe.systems[i].position.y*(zoom*midh/widthUniverse);
-    if(midw+x-(offsetX*(zoom*midw/widthUniverse))>-midw&&(midw+x-(offsetX*(zoom*midw/widthUniverse))<3*midw)) {//Ony render things in frame
-      if(midh+y+(offsetY*(zoom*midh/widthUniverse))>-midh&&midh+y+(offsetY*(zoom*midh/widthUniverse)<3*midh)) {
+    if(midw+x-(offsetX*(zoom*midw/widthUniverse))>-midw&&(midw+x-(offsetX*(zoom*midw/widthUniverse))<zoomScaleFactor*midw)) {//Ony render things in frame
+      if(midh+y+(offsetY*(zoom*midh/widthUniverse))>-midh&&midh+y+(offsetY*(zoom*midh/widthUniverse)<zoomScaleFactor*midh)) {
         if(zoom>7){//Close enought to see system scale
           galacticMapCtx.strokeStyle="white";
           var tempSystem=universe.systems[i];
