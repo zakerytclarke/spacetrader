@@ -129,7 +129,7 @@ function renderGalacticMap(){
   galacticMapCtx.fillRect(0,0,midw*2,midh*2);
 
   var zoomScaleFactor=Infinity;
-  var zoomScaleFactor=Math.pow(Math.pow(zoom,zoom),zoom);
+  //var zoomScaleFactor=Math.pow(Math.pow(zoom,zoom),zoom);
   var distanceScale=10;//Should be 63421
   var sizeScale=149600000//Should be 149600000*63421
   for(var i=0;i<universe.systems.length;i++){
