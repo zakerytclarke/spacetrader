@@ -2,7 +2,7 @@ var seed=42;
 var usedNames=[""];
 var usedPositions=[{x:0,y:0}];
 //var widthUniverse=93000000000;
-var widthUniverse=1000;
+var widthUniverse=1000;//1000 for 299
 var minStarDistance=4;
 var maxStarDistance=100;
 
@@ -197,7 +197,6 @@ function test(system){
 
 
 //console.log(JSON.stringify(universe));
-
 
 
 
@@ -400,9 +399,9 @@ function randomGaussian(y,int){
 
 
 function NameGenerator(){
-  var prefixes=["Sa","Ut","Ur","Er","Co","Ti","Te","Di","Hy","Me","Po","Te","At","Th","Ub","Nim","Ep","Pa","Anth","Tar","Al","Cra","Ja","Ma","Ri","Su","Ya"];
-  var midfixes=["","yro","ta","th","mas","uu","ua","dav","ge","das","po","aal","ba","en","ar","ana","im","ce","cel","arth","ku","s","la","ban"];
-  var postfixes=["","a","ar","er","an","os","en","es","is","iin","oth","nt","on","do","adus","eras","enas","o","gan","ora","ir","pa","ino"];
+  var prefixes=["Sa","Ut","Ur","Er","Co","Ti","Te","Di","Hy","Me","Po","Te","At","Th","Ub","Nim","Ep","Pa","Anth","Tar","Al","Cra","Ja","Ma","Ri","Su","Ya","Cor","Be","Da","Dath","Ea","En","Ex"];
+  var midfixes=["","yro","ta","th","mas","uu","ua","dav","ge","das","po","aal","ba","en","ar","ana","im","ce","cel","arth","ku","s","la","ban","as","us","usc","ell","orm","ia","eg","uc","or"];
+  var postfixes=["","a","ar","er","an","os","en","es","is","iin","oth","nt","on","do","adus","eras","enas","o","gan","ora","ir","pa","ino","ant","mar","in","uu","anu","sor","iine","oran","re","gol","ia"];
   var secondNames=["","","","","","","","","","","Prime","Carpo",""]
   var name="";
   while(usedNames.indexOf(name)!=-1){
@@ -420,6 +419,11 @@ function generateSysPosition(){
     bool=true;
     x=random(widthUniverse)-(widthUniverse/2);
     y=random(widthUniverse)-(widthUniverse/2);
+    /*
+    if(distance({x:x,y:y},{x:0,y:0})<200){//Black hole in center
+      bool=false;
+    }
+    */
     for(var i=0;i<usedPositions.length;i++){
       if(distance({x:x,y:y},usedPositions[i])<20){//Don't put systems too close
         bool=false;

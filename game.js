@@ -129,6 +129,7 @@ function renderGalacticMap(){
   galacticMapCtx.fillRect(0,0,midw*2,midh*2);
 
   var zoomScaleFactor=Infinity;
+  var zoomScaleFactor=Math.pow(Math.pow(zoom,zoom),zoom);
   var distanceScale=10;//Should be 63421
   var sizeScale=149600000//Should be 149600000*63421
   for(var i=0;i<universe.systems.length;i++){
@@ -228,6 +229,14 @@ function renderGalacticMap(){
             galacticMapCtx.arc(midw+x-(offsetX*(zoom*midw/widthUniverse))+upX,midh+y+(offsetY*(zoom*midh/widthUniverse))+upY,objectScale,0,2*Math.PI);
             galacticMapCtx.fill();
 
+            if(zoom>20){
+              galacticMapCtx.fillStyle="white";
+              galacticMapCtx.strokeStyle="white";
+              galacticMapCtx.strokeText(universe.systems[i].planets[j].name,midw+x-(offsetX*(zoom*midw/widthUniverse))+upX,midh+y+(offsetY*(zoom*midh/widthUniverse))+upY);
+              galacticMapCtx.fillText(universe.systems[i].planets[j].name,midw+x-(offsetX*(zoom*midw/widthUniverse))+upX,midh+y+(offsetY*(zoom*midh/widthUniverse))+upY);
+            }
+
+
             //Draw Orbits
             galacticMapCtx.beginPath();
             galacticMapCtx.arc(midw+x-(offsetX*(zoom*midw/widthUniverse)),midh+y+(offsetY*(zoom*midh/widthUniverse)),planetScale,0,2*Math.PI);
@@ -240,6 +249,7 @@ function renderGalacticMap(){
                 galacticMapCtx.beginPath();
                 galacticMapCtx.arc(midw+x-(offsetX*(zoom*midw/widthUniverse))+upX,midh+y+(offsetY*(zoom*midh/widthUniverse))+upY,zoom*tempSystem.planets[j].moons[k].distance/10,0,2*Math.PI);
                 galacticMapCtx.stroke();
+
 
 
 
@@ -290,6 +300,14 @@ function renderGalacticMap(){
                 galacticMapCtx.beginPath();
                 galacticMapCtx.arc(midw+x-(offsetX*(zoom*midw/widthUniverse))+upX+moonupX,midh+y+(offsetY*(zoom*midh/widthUniverse))+upY+moonupY,moonobjectScale,0,2*Math.PI);
                 galacticMapCtx.fill();
+                /*
+                if(zoom>8000){
+                  galacticMapCtx.fillStyle="white";
+                  galacticMapCtx.strokeStyle="white";
+                  galacticMapCtx.strokeText(universe.systems[i].planets[j].moons[k].name,midw+x-(offsetX*(zoom*midw/widthUniverse))+upX+moonupX,midh+y+(offsetY*(zoom*midh/widthUniverse))+upY+moonupY);
+                  galacticMapCtx.fillText(universe.systems[i].planets[j].moons[k].name,midw+x-(offsetX*(zoom*midw/widthUniverse))+upX+moonupX,midh+y+(offsetY*(zoom*midh/widthUniverse))+upY+moonupY);
+                }
+                */
 
 
               }
